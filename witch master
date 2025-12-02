@@ -1,0 +1,166 @@
+[33mcommit e758765a3b338a991637a779262f524ecae8500d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32msprint1[m[33m)[m
+Author: Ржевский Кирилл <you@example.com>
+Date:   Tue Dec 2 11:43:01 2025 +0300
+
+    Выполнен sprint1
+
+[1mdiff --git a/.config/dotnet-tools.json b/.config/dotnet-tools.json[m
+[1mnew file mode 100644[m
+[1mindex 0000000..03df232[m
+[1m--- /dev/null[m
+[1m+++ b/.config/dotnet-tools.json[m
+[36m@@ -0,0 +1,13 @@[m
+[32m+[m[32m{[m
+[32m+[m[32m  "version": 1,[m
+[32m+[m[32m  "isRoot": true,[m
+[32m+[m[32m  "tools": {[m
+[32m+[m[32m    "csharpier": {[m
+[32m+[m[32m      "version": "1.2.1",[m
+[32m+[m[32m      "commands": [[m
+[32m+[m[32m        "csharpier"[m
+[32m+[m[32m      ],[m
+[32m+[m[32m      "rollForward": false[m
+[32m+[m[32m    }[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/SampleApp.API/Controllers/UsersController.cs b/SampleApp.API/Controllers/UsersController.cs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..e69de29[m
+[1mdiff --git a/SampleApp.API/Entities/User.cs b/SampleApp.API/Entities/User.cs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..68d2704[m
+[1m--- /dev/null[m
+[1m+++ b/SampleApp.API/Entities/User.cs[m
+[36m@@ -0,0 +1,5 @@[m
+[32m+[m[32mpublic class User[m
+[32m+[m[32m{[m
+[32m+[m[32m    public int Id { get; set; }[m
+[32m+[m[32m    public string Name { get; set; } = string.Empty;[m
+[32m+[m[32m}[m
+[1mdiff --git a/SampleApp.API/Interfaces/IUserRepository.cs b/SampleApp.API/Interfaces/IUserRepository.cs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..88c62f4[m
+[1m--- /dev/null[m
+[1m+++ b/SampleApp.API/Interfaces/IUserRepository.cs[m
+[36m@@ -0,0 +1,8 @@[m
+[32m+[m[32mpublic interface IUserRepository[m
+[32m+[m[32m{[m
+[32m+[m[32m    User CreateUser(User user);[m
+[32m+[m[32m    List<User> GetUsers();[m
+[32m+[m[32m    User EditUser(User user, int id);[m
+[32m+[m[32m    bool DeleteUser(int id);[m
+[32m+[m[32m    User FindUserById(int id);[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/SampleApp.API/Repositories/UsersMemoryRepository .cs b/SampleApp.API/Repositories/UsersMemoryRepository .cs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..b339a9d[m
+[1m--- /dev/null[m
+[1m+++ b/SampleApp.API/Repositories/UsersMemoryRepository .cs[m	
+[36m@@ -0,0 +1,41 @@[m
+[32m+[m[32mpublic class UsersMemoryRepository : IUserRepository[m
+[32m+[m[32m{[m
+[32m+[m[32m    public List<User> Users { get; set; } = new List<User>();[m
+[32m+[m
+[32m+[m[32m    public User CreateUser(User user)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        Users.Add(user);[m
+[32m+[m[32m        return user;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public bool DeleteUser(int id)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        var result = FindUserById(id);[m
+[32m+[m[32m        Users.Remove(result);[m
+[32m+[m[32m        return true;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public User EditUser(User user, int id)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        var result = FindUserById(id);[m
+[32m+[m[32m        result.Name = user.Name;[m
+[32m+[m[32m        return result;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public User FindUserById(int id)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        var result = Users.Where(u => u.Id == id).FirstOrDefault();[m
+[32m+[m
+[32m+[m[32m        if (result == null)[m
+[32m+[m[32m        {[m
+[32m+[m[32m            throw new Exception($"Нет пользователя с id = {id}");[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        return result;[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    public List<User> GetUsers()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        return Users;[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m
+[1mdiff --git a/SampleApp.API/SampleApp.API.csproj b/SampleApp.API/SampleApp.API.csproj[m
+[1mindex 7658327..5e7bae2 100644[m
+[1m--- a/SampleApp.API/SampleApp.API.csproj[m
+[1m+++ b/SampleApp.API/SampleApp.API.csproj[m
+[36m@@ -7,6 +7,7 @@[m
+   </PropertyGroup>[m
+ [m
+   <ItemGroup>[m
+[32m+[m[32m    <PackageReference Include="FluentValidation" Version="12.1.0" />[m
+     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.8" />[m
+   </ItemGroup>[m
+ [m
+[1mdiff --git a/SampleApp.API/Swashbuckle/AspNetCore/Annotations/Program.cs b/SampleApp.API/Swashbuckle/AspNetCore/Annotations/Program.cs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..01327f3[m
+[1m--- /dev/null[m
+[1m+++ b/SampleApp.API/Swashbuckle/AspNetCore/Annotations/Program.cs[m
+[36m@@ -0,0 +1,18 @@[m
+[32m+[m[32mbuilder.Services.AddSwaggerGen(c =>[m
+[32m+[m[32m{[m
+[32m+[m[32m    c.EnableAnnotations();[m
+[32m+[m[32m    c.SwaggerDoc([m
+[32m+[m[32m        "v1",[m
+[32m+[m[32m        new OpenApiInfo[m
+[32m+[m[32m        {[m
+[32m+[m[32m            Title = "SampleApp",[m
+[32m+[m[32m            Version = "v1",[m
+[32m+[m[32m            Description = "API для пользователей",[m
+[32m+[m[32m            Contact = new OpenApiContact[m
+[32m+[m[32m            {[m
+[32m+[m[32m                Url = new Uri("http://prep.scc/~asv"),[m
+[32m+[m[32m                Email = "asv@prep.scc",[m
+[32m+[m[32m            },[m
+[32m+[m[32m        }[m
+[32m+[m[32m    );[m
+[32m+[m[32m});[m
+\ No newline at end of file[m
+[1mdiff --git a/Validations/UserValidator.cs b/Validations/UserValidator.cs[m
+[1mnew file mode 100644[m
+[1mindex 0000000..f4cc4c8[m
+[1m--- /dev/null[m
+[1m+++ b/Validations/UserValidator.cs[m
+[36m@@ -0,0 +1,19 @@[m
+[32m+[m[32mpublic class UserValidator : AbstractValidator<User>[m
+[32m+[m[32m{[m
+[32m+[m[32m    public UserValidator()[m
+[32m+[m[32m    {[m
+[32m+[m[32m        RuleFor(u => u.Name)[m
+[32m+[m[32m            .NotEmpty().WithMessage("Имя обязательно")[m
+[32m+[m[32m            .Length(2, 50).WithMessage("Имя должно быть от 2 до 50 символов")[m
+[32m+[m[32m            .Must(StartsWithCapitalLetter).WithMessage("Имя должно начинаться с заглавной буквы");[m
+[32m+[m[41m            [m
+[32m+[m[32m        RuleFor(u => u.Id)[m
+[32m+[m[32m            .GreaterThan(0).WithMessage("ID должен быть положительным числом");[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m    private bool StartsWithCapitalLetter(string name)[m
+[32m+[m[32m    {[m
+[32m+[m[32m        if (string.IsNullOrEmpty(name)) return false;[m
+[32m+[m[32m        return char.IsUpper(name[0]);[m
+[32m+[m[32m    }[m
+[32m+[m[32m}[m
+\ No newline at end of file[m

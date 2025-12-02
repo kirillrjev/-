@@ -1,0 +1,18 @@
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+    c.SwaggerDoc(
+        "v1",
+        new OpenApiInfo
+        {
+            Title = "SampleApp",
+            Version = "v1",
+            Description = "API для пользователей",
+            Contact = new OpenApiContact
+            {
+                Url = new Uri("http://prep.scc/~asv"),
+                Email = "asv@prep.scc",
+            },
+        }
+    );
+});
